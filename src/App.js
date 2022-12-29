@@ -1,59 +1,49 @@
 import './App.css'
-import React, {useRef, useState} from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 
-export default function App () {
-
+export default function App() {
   const [count, setCount] = useState(0)
-  const [isCounting, setisCounting] = useState(false)
+  const [isCounting, setIsCounting] = useState(false)
   const timerIdRef = useRef(null) // initial state
 
+  const start = () => {
+    setIsCounting(true)
+    timerIdRef.current = setInterval(() => {setCount((prev) => prev + 1)}, 1000)
 
-  start = () => {
-    this.setState({ isCounting: true })
-
-    this.int = setInterval(() => {
-      this.setState({ count: this.state.count + 1 })
-    }, 1000)
   }
 
-  stop = () => {
-    this.setState({ isCounting: false })
-    clearInterval(this.int)
+  const stop = () => {
+    setIsCounting(false)
+    clearInterval(timerIdRef.current)
   }
 
-  restart = () => {
-    this.setState({ isCounting: false, count: 0 })
-    clearInterval(this.int)
+  const restart = () => {
+    setIsCounting(false)
+    setCount(0)
+    clearInterval(timerIdRef.current)
   }
 
-  // componentDidMount() {
-  //   console.log('componentDidMount')
-  //   const his = localStorage.getItem('second')
-  //   this.setState({count: +his})
-  // }
+  useEffect(()=>{
+    console.log('componentDidMount');
+    const data = localStorage.getItem('item')
+    setCount(+data)
+  },[])
 
-  // componentDidUpdate() {
-  //   console.log('componentDidUpdate')
-  //   localStorage.setItem('second', this.state.count)
-  // }
-
-  // componentWillUnmount(){
-  //   console.log('componentWillUnmount')
-  //   clearInterval(this.int)
-  // }
+  useEffect(()=>{
+    console.log('componentDidUpdate');
+    localStorage.setItem('item', count)
+  },[count])
 
   return (
     <div className="container">
-      <h2>{this.state.count}</h2>
-      {!this.state.isCounting ? (
-        <button onClick={this.start}>start</button>
+      <h2>{count}</h2>
+      {!isCounting ? (
+        <button onClick={start}>start</button>
       ) : (
-        <button onClick={this.stop}>stop</button>
+        <button onClick={stop}>stop</button>
       )}
 
-      <button onClick={this.restart}>restart</button>
+      <button onClick={restart}>restart</button>
     </div>
   )
 }
-
-
